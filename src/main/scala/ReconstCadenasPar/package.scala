@@ -1,16 +1,32 @@
 import common._
-import scala.collection.parallel.CollectionConverters._
 import Oraculo._
 import ArbolSufijos._
+import ReconstCadenas._
 
 package object ReconstCadenasPar {
   // Ahora versiones paralelas
 
-  def reconstruirCadenaIngenuoPar(umbral: Int)(n: Int, o: Oraculo): Seq[Char] = {
+  def reconstruirCadenaIngenuoPar(umbral: Int)(n: Int, o: Oraculo):Seq[Char] = {
     // recibe la longitud de la secuencia que hay que reconstruir (n), y un oraculo para esa secuencia
     // y devuelve la secuencia reconstruida
     // Usa paralelismo de tareas
-    ???
+    val posiblesCadenas=getAlfabetoN(n)
+
+    def reconstruirCadena(posiblesCadenas:Seq[Seq[Char]]):Seq[Char]={
+      //recibe la secuencia de cadenas candidatas
+      //si la longitud de la secuencia es mayor al umbral se parte en dos para hacer paralelismo de datos
+      //si la longitud es igual o menor al umbral se busca la secuencia del oraculo usando el metodo secuencial
+      val cantidadCadenas=posiblesCadenas.length
+      if(cantidadCadenas>umbral){
+        val (posiblesCadenas1,posiblesCadenas2) = posiblesCadenas.splitAt(cantidadCadenas/2)
+        val (resultado1,resultado2)= parallel(encontrarCadena(posiblesCadenas1,o),encontrarCadena(posiblesCadenas2,o))
+        resultado1++resultado2
+      }
+      else {
+        encontrarCadena(posiblesCadenas,o)
+      }
+    }
+    reconstruirCadena(posiblesCadenas)
   }
 
   def reconstruirCadenaMejoradoPar(umbral: Int)(n: Int, o: Oraculo): Seq[Char] = {
