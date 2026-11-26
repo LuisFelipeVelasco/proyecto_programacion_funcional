@@ -14,12 +14,12 @@ package object ReconstCadenasPar {
 
     def reconstruirCadena(posiblesCadenas:Seq[Seq[Char]]):Seq[Char]={
       //recibe la secuencia de cadenas candidatas
-      //si la longitud de la secuencia es mayor al umbral se parte en dos para hacer paralelismo de datos
+      //si la longitud de la secuencia es mayor al umbral se parte en dos para hacer paralelismo de tareas
       //si la longitud es igual o menor al umbral se busca la secuencia del oraculo usando el metodo secuencial
       val cantidadCadenas=posiblesCadenas.length
       if(cantidadCadenas>umbral){
         val (posiblesCadenas1,posiblesCadenas2) = posiblesCadenas.splitAt(cantidadCadenas/2)
-        val (resultado1,resultado2)= parallel(encontrarCadena(posiblesCadenas1,o),encontrarCadena(posiblesCadenas2,o))
+        val (resultado1,resultado2)= parallel(reconstruirCadena(posiblesCadenas1),reconstruirCadena(posiblesCadenas2))
         resultado1++resultado2
       }
       else {
