@@ -57,6 +57,7 @@ build/
 /src/*
 !/src/main/
 !/src/test/
+!/build.sbt
 
 /src/main/*
 !/src/main/scala/
